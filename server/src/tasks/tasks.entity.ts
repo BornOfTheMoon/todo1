@@ -18,6 +18,6 @@ export class Task {
     @Column({type: 'boolean', nullable: false, default: false})
     is_finished?: boolean;
 
-    @ManyToOne(() => User, (user) => user.id, { nullable: true, onDelete: 'CASCADE' })
+    @Column({type: 'integer', nullable: false, default: 0})
     user!: number;
 }

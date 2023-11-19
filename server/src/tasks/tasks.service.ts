@@ -48,8 +48,9 @@ export class TasksService {
   }
 
   async findAll(findTasksDto: FindTasksDto): Promise<ResponseDto> {
+    console.log(findTasksDto)
     const task = await this.tasksRepository.find({
-        where: {user: findTasksDto.user, parent: findTasksDto.parent} 
+        where: {user: findTasksDto.user, parent: findTasksDto.parent}
     });
     let tasks = []
     for (let i = 0; i < task.length; i++) {

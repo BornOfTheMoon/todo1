@@ -62,12 +62,16 @@ export const getTasks = async (user: number | null) => {
   
   console.log(ts)
   setTasks(ts)
+
+  return ts
 }
- 
+
 function UsersTasksPage() {
   const navigate = useNavigate()
   const user = useStore($user)
-  getTasks(user)
+  const tasks = useStore($tasks)
+
+  useEffect(() => {getTasks(user)}, [])
  
     return (
         <div className={styles.taskPage}>

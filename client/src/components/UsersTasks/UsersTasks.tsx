@@ -11,6 +11,7 @@ import postRequest from '../../api/PostRequest';
 import { render } from 'react-dom';
 import deleteRequest from '../../api/DeleteRequest';
 import { useNavigate } from 'react-router-dom';
+import { getTasks } from '../../pages/UsersTasksPage/UsersTasksPage';
 
 
 /*const tasks = [
@@ -19,9 +20,7 @@ import { useNavigate } from 'react-router-dom';
   {id: 3, name: 'ame3', children: [
     {id: 4, name: 'named'}
   ]}
-]*/
-
-
+]*/ 
 
 const onChange = async (items: any) => {
   console.log(items)
@@ -56,6 +55,8 @@ function UsersTasks () {
 
   console.log(user)
 
+  useEffect(() => {}, [tasks])
+
   const renderItem = ({ item, index, collapseIcon}: any) => {
     console.log(item)
   
@@ -81,10 +82,14 @@ function UsersTasks () {
       let taskData;
       taskData = await deleteRequest({id: item.id}, 'http://localhost:8080/tasks/delete')
               .catch(err => taskData = null);
+
+      getTasks(user)
       
-      navigate('/tasks', {replace: true}) 
+      navigate('/tasks', {replace: false}) 
   }
-     
+  if (!tasks) {
+    return <div>Ooooops</div>
+  } else {  
     return (
       <div className={styles.row}>
         <div className={styles.item}>
@@ -102,8 +107,11 @@ function UsersTasks () {
       </div>
     );
   };
+}
 
-  
+  if (!tasks) {
+    return <div>Ooooops</div>
+  } else {
     return (
         <Nestable className={styles.Nestable}
           items={tasks}
@@ -120,6 +128,7 @@ function UsersTasks () {
           collapsed={false}
         />
     )
+  }
 }
 
 export default UsersTasks;
