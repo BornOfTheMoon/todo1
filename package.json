@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@radix-ui/react-popover": "1.0.7",
+    "cors": "^2.8.5",
+    "fetch-parse": "^1.1.0",
+    "node-sass": "^9.0.0",
+    "react-nestable": "^2.0.0"
+  }
+}

@@ -1,3 +1,3 @@
 export class LogoutDto {
-    name!: string;
+    id!: number;
   }

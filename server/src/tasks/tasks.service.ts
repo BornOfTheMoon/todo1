@@ -6,7 +6,7 @@ import { ResponseDto } from './response.dto/response.dto';
 import { TasksDto } from './tasks.dto/tasks.dto';
 import { FindTasksDto } from './findTasks.dto/findTasks.dto';
 import { UpdateTaskDto } from './updateTask.dto/updateTask.dto';
-import { DeleteTaskDto } from './deleteTask.dto/deleteTask.dto';
+import { FindTaskDto } from './findTask.dto/findTask.dto';
 
 @Injectable()
 export class TasksService {
@@ -30,6 +30,23 @@ export class TasksService {
     };
   }
 
+  async findById(taskId: number): Promise<ResponseDto> {
+    const task = await this.tasksRepository.findOne({where: {id: taskId}});
+    if (!task) {
+        return {
+            success: false,
+            data: null,
+            message: 'this task does not exit'
+        }
+    } else {
+      return {
+        success: true,
+        data: task,
+        message: 'Task found successfully'
+      }
+    }
+  }
+
   async findAll(findTasksDto: FindTasksDto): Promise<ResponseDto> {
     const task = await this.tasksRepository.find({
         where: {user: findTasksDto.user, parent: findTasksDto.parent} 
@@ -50,7 +67,7 @@ export class TasksService {
     }
   }
 
-  async remove(deleteTaskDto: DeleteTaskDto): Promise<ResponseDto> {
+  async remove(deleteTaskDto: FindTaskDto): Promise<ResponseDto> {
     const task = await this.tasksRepository.findOne({where: {id: deleteTaskDto.id}})
     await this.tasksRepository.delete(deleteTaskDto.id);
     console.log(deleteTaskDto.id + " successfully deleted");
@@ -65,28 +82,33 @@ export class TasksService {
     return {
         success: true,
         data: task,
+        message: 'Task deleted successfully'
     };
   }
 
   async update(updateTasksDto: UpdateTaskDto): Promise<ResponseDto> {
+    console.log(updateTasksDto)
     const task = await this.tasksRepository.findOne({where: {id: updateTasksDto.id}});
     if (!task) {
         return {
             success: false,
+            data: {},
             message: 'this task does not exit'
         }
     }
 
-   task.name = updateTasksDto.name ? updateTasksDto.name : task.name,
-   task.user = updateTasksDto.user ? updateTasksDto.user : task.user,
-   task.description = updateTasksDto.description ? updateTasksDto.description : task.description,
-   task.parent = updateTasksDto.parent ? updateTasksDto.parent : task.parent,
-   task.is_finished = updateTasksDto.is_finished ? updateTasksDto.is_finished : task.is_finished
+   task.name = (updateTasksDto.name !== undefined) ? updateTasksDto.name : task.name,
+   task.user = (updateTasksDto.user !== undefined) ? updateTasksDto.user : task.user,
+   task.description = (updateTasksDto.description !== undefined) ? updateTasksDto.description : task.description,
+   task.parent = (updateTasksDto.parent !== undefined) ? updateTasksDto.parent : task.parent,
+   task.is_finished = (updateTasksDto.is_finished !== undefined) ? updateTasksDto.is_finished : task.is_finished
 
+   console.log(task)
    await this.tasksRepository.update(task.id, task)
     return {
       success: true,
       data: task,
+      message: 'Task updated successfully'
     };
   }
 }

@@ -1,0 +1,50 @@
+.Nestable {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10vw;
+    align-self: flex-start;
+    justify-self: flex-start;
+
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 5vh;
+    border: solid rgb(199, 199, 255);
+    border-radius: 5px;
+    padding: 1vh 2vw;
+    width: 70vw;
+
+    .item {
+        display: flex;
+        flex-direction: row;
+
+        .iconCollapse {
+            margin-right: 1vw;
+            font-size: xx-large;
+            cursor: pointer;
+        }
+    
+        .name {
+            font-size: x-large;
+            cursor: pointer;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        
+        button {
+            padding: 1vh 1vw;
+            border: solid rgb(199, 199, 255);
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: x-small;
+            margin-right: 0.5vw;
+        }
+    }
+}

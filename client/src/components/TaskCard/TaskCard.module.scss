@@ -1,0 +1,55 @@
+.taskCard {
+    display: flex;
+    flex-direction: column;
+    width: 25vw;
+    align-items: flex-start;
+    align-self: center;
+    justify-content: space-around;
+    padding-bottom: 2vh;
+
+    .taskName {
+        align-self: center;
+        font-size: xx-large;
+        font-weight: bold;
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-style: italic;
+        text-decoration: underline;
+
+    }
+
+    .description {
+
+        font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-style: italic;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .descriptionTitle {
+            font-size: large;
+            font-weight: normal;
+        }
+
+        .descriptionContent {
+            font-size: normal;
+            margin-left: 2vw;
+        }
+    }
+
+    
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        
+        
+        button {
+            margin: 5vh 1.5vw 0;
+            padding: 2vh 2vw;
+            border: solid rgb(199, 199, 255);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    }
+}
+
+

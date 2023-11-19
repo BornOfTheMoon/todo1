@@ -1,4 +1,4 @@
-import {Controller, Post, Get, Body, HttpStatus, HttpCode} from '@nestjs/common';
+import {Controller, Post, Get, Body, HttpStatus, HttpCode, Res, Req} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { LoginDto } from './login.dto/login.dto';
 import { RegisterDto } from './register.dto/register.dto';
@@ -13,38 +13,48 @@ export class UsersController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() registerDto: RegisterDto): Promise<ResponseDto> {
-    const user = await this.usersService.create(registerDto);
-    const data = user.data;
+    const data = await this.usersService.create(registerDto);
     return {
-      success: true,
-      data: data,
-      message: 'User created successfully',
+      success: data.success,
+      data: data.data,
+      message: data.message,
     };
   }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(
+    @Req()
+    req: Request,
     @Body()
     loginDto: LoginDto,
   ): Promise<ResponseDto> {
-    const user = await this.usersService.findByNameAndPassword(loginDto);
-    const data = user.data;
+    console.log(loginDto)
+    console.log(req.body)
+    if (!loginDto.name) {
+      console.log('error')
+      return {
+        success: false,
+        data: loginDto,
+        message: 'Login not successfully',
+      };
+    }
+    const data = await this.usersService.findByNameAndPassword(loginDto);
     return {
-      success: true,
-      data: data,
-      message: 'Login successfully',
+      success: data.success,
+      data: data.data,
+      message: data.message,
     };
   }
 
   @Get('users')
   @HttpCode(HttpStatus.OK)
   async users(
-    @Body()
-    usersDto: UsersDto,
   ): Promise<ResponseDto> {
+    console.log('hello')
     const user = await this.usersService.findAll();
     const data = user.data;
+    console.log(data)
     return {
       success: true,
       data: data,
@@ -58,12 +68,13 @@ export class UsersController {
     @Body()
     logoutDto: LogoutDto,
   ): Promise<ResponseDto> {
-    const user = await this.usersService.logout(logoutDto);
-    const data = user.data;
+    console.log(logoutDto)
+    const data = await this.usersService.logout(logoutDto);
+    console.log(data)
     return {
-      success: true,
-      data: data,
-      message: 'Logout successfully',
+      success: data.success,
+      data: data.data,
+      message: data.message,
     };
   }
 }

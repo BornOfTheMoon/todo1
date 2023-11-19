@@ -4,7 +4,7 @@ import { TasksDto } from './tasks.dto/tasks.dto';
 import { ResponseDto } from './response.dto/response.dto';
 import { FindTasksDto } from './findTasks.dto/findTasks.dto';
 import { UpdateTaskDto } from './updateTask.dto/updateTask.dto';
-import { DeleteTaskDto } from './deleteTask.dto/deleteTask.dto';
+import { FindTaskDto } from './findTask.dto/findTask.dto'
 
 @Controller('tasks')
 export class TasksController {
@@ -22,7 +22,7 @@ export class TasksController {
     };
   }
 
-  @Get('tasks')
+  @Post('tasks')
   @HttpCode(HttpStatus.OK)
   async tasks(
     @Body()
@@ -37,18 +37,33 @@ export class TasksController {
     };
   }
 
+  @Post('/:id')
+  @HttpCode(HttpStatus.OK)
+  async task(
+    @Body()
+    findTaskDto: FindTaskDto,
+  ): Promise<ResponseDto> {
+    console.log(findTaskDto)
+    const data = await this.tasksService.findById(findTaskDto.id);
+    console.log(data)
+    return {
+      success: data.success,
+      data: data.data,
+      message: data.message,
+    };
+  }
+
   @Delete('delete')
   @HttpCode(HttpStatus.OK)
   async delete(
     @Body()
-    deleteTaskDto: DeleteTaskDto,
+    deleteTaskDto: FindTaskDto,
   ): Promise<ResponseDto> {
     const task = await this.tasksService.remove(deleteTaskDto);
-    const data = task.data;
     return {
-      success: true,
-      data: data,
-      message: 'Task deleted successfully',
+      success: task.success,
+      data: task.data,
+      message: task.message,
     };
   }
 
@@ -60,9 +75,9 @@ export class TasksController {
   ) : Promise<ResponseDto> {
     const data = await this.tasksService.update(updateTaskDto);
     return {
-      success: true,
-      data: data,
-      message: 'Task updated successfully'
+      success: data.success,
+      data: data.data,
+      message: data.message 
     }
   }
 }

@@ -24,7 +24,11 @@ export class UsersService {
       where: { name: registerDto.name },
     });
     if (userExists) {
-      throw new BadRequestException('User already exists');
+      return {
+        success: false,
+        data: null,
+        message: 'User already exists',
+      };
     }
 
     const salt = await bcrypt.genSalt();
@@ -38,7 +42,12 @@ export class UsersService {
     await this.updateRefreshToken(savedUser.id, tokens.refreshToken);
     return {
       success: true,
-      data: [savedUser, tokens],
+      data: {
+        id: savedUser.id,
+        name: savedUser.name,
+        tokens: tokens
+      },
+      message: 'User created successfully'
     };
   }
 
@@ -46,10 +55,23 @@ export class UsersService {
     const user = await this.usersRepository.findOne({
       where: { name: loginDto.name },
     });
-    if (!user) throw new BadRequestException('User does not exist');
-    const passwordMatch = bcrypt.compare(loginDto.password, user.password);
+    if (!user) {
+      return {
+        success: false,
+        data: null,
+        message: 'User does not exist',
+      };
+    }
+    console.log(loginDto)
+    console.log(bcrypt.compare(loginDto.password, user.password));
+    const passwordMatch = bcrypt.compareSync(loginDto.password, user.password);
+    console.log(passwordMatch)
     if (!passwordMatch) {
-      throw new BadRequestException('Password is incorrect');
+      return {
+        success: false,
+        data: null,
+        message: 'Password is incorrect',
+      };
     }
     const tokens = await this.getTokens(user.id, user.name);
     await this.updateRefreshToken(user.id, tokens.refreshToken);
@@ -61,6 +83,7 @@ export class UsersService {
         name: user.name,
         tokens: tokens
       },
+      message: 'Login successfully',
     };
   }
 
@@ -84,7 +107,11 @@ export class UsersService {
   async updateRefreshTokenInUser(userId: number, refresh_token: string | null): Promise<ResponseDto> {
     const user = await this.usersRepository.findOne({where: {id: userId}});
     if (!user) {
-      throw new BadRequestException('This user does not exit');
+      return {
+        success: false,
+        data: null,
+        message: 'User does not exit',
+      };
     }
 
    user.refresh_token = refresh_token ? refresh_token : undefined,
@@ -97,11 +124,24 @@ export class UsersService {
   }
 
   async logout(logoutDto: LogoutDto) {
-    const user = await this.usersRepository.findOne({where: {name: logoutDto.name}});
+    const user = await this.usersRepository.findOne({where: {id: logoutDto.id}});
     if (!user) {
-      throw new BadRequestException('This user does not exit');
+      return {
+        success: false,
+        data: null,
+        message: 'User does not exist',
+      };
     }
-    return this.updateRefreshTokenInUser(user.id, null);
+    const data = await this.updateRefreshTokenInUser(user.id, null);
+    let message = 'Something wrong :('
+    if (data.success) {
+      message = 'User does not exist'
+    }
+    return {
+      success: data.success,
+      data: data.data,
+      message: 'Log out successfully',
+    }
   }
 
   async updateRefreshToken(userId: number, refreshToken: string) {

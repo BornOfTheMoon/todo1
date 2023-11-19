@@ -9,8 +9,8 @@ export class Task {
     @Column({type: 'varchar', nullable: false})
     name!: string;
 
-    @Column({type: 'integer', nullable: true})
-    parent?: number;
+    @Column({type: 'integer', nullable: false, default: 0})
+    parent!: number;
 
     @Column({type: 'varchar', nullable: true})
     description?: string;

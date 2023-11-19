@@ -1,0 +1,51 @@
+.FormRoot {
+    padding: 5vh 4vw 1vh;
+    border: solid rgb(199, 199, 255);
+    border-radius: 10px;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 3vh 5vw;
+
+    .FormField {
+        padding: 1vh 0;
+        display: flex;
+        flex-direction: column;
+
+        .FormFieldContext {
+            align-self: flex-start;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding-left: 0.25vw;
+            .FormMessage {
+                font-size: x-small;
+            }
+        }
+
+        .FormControl {
+            margin: 2vh 0;
+            border: solid rgb(199, 199, 255);
+            border-radius: 5px;
+            padding: 1vh 1vw;
+           
+        }
+    }
+
+    .Button {
+        margin: 5vh 0.25vw 0;
+        padding: 2vh 2vw;
+        border: solid rgb(199, 199, 255);
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .link {
+        margin-top: 7vh;
+        font-size: small;
+        text-decoration: underline;
+        cursor: pointer;
+        color: black;
+    }
+}
