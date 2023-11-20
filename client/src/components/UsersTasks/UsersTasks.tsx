@@ -1,28 +1,18 @@
-import Nestable, { Item } from 'react-nestable';
-import React, { useEffect } from 'react';
+import Nestable from 'react-nestable';
+import { ReactElement, useEffect } from 'react';
 import styles from './UsersTasks.module.scss'
 import 'react-nestable/dist/styles/index.css';
-import Logo from '../../components/Logo/Logo';
-import CollapseIcon from '../../components/CollapseIcon/CollapseIcon';
-import { $tasks, $user, $userToken, setTask, setTasks } from '../../App';
+import { $tasks, $user, setTask } from '../../App';
 import { useStore } from 'effector-react';
 import patchRequest from '../../api/PatchRequest';
 import postRequest from '../../api/PostRequest';
-import { render } from 'react-dom';
 import deleteRequest from '../../api/DeleteRequest';
 import { useNavigate } from 'react-router-dom';
 import { getTasks } from '../../pages/UsersTasksPage/UsersTasksPage';
+import * as React from 'react';
 
 
-/*const tasks = [
-  {id: 14, name: 'naame'},
-  {id:2, name: 'naem', children: []},
-  {id: 3, name: 'ame3', children: [
-    {id: 4, name: 'named'}
-  ]}
-]*/ 
-
-const onChange = async (items: any) => {
+const onChange = async (items: any): Promise<void> => {
   console.log(items)
   const updateElem = items.dragItem
   let parentId = 0
@@ -42,25 +32,26 @@ const onChange = async (items: any) => {
 
   const updatedElem = await patchRequest(data, 'http://localhost:8080/tasks/update')
       .catch(err => console.log(err))
+  console.log(updatedElem)
 
 }
 
-function UsersTasks () {
+function UsersTasks (): ReactElement<any, any> {
   const navigate = useNavigate()
 
-  const tasks = useStore($tasks) 
+  let tasks: any[] = []
+  tasks = useStore($tasks) 
 
-  const auth = useStore($userToken)
   const user = useStore($user)
 
   console.log(user)
 
-  useEffect(() => {}, [tasks])
+  useEffect(() => {console.log('update')}, [tasks])
 
-  const renderItem = ({ item, index, collapseIcon}: any) => {
+  const renderItem = ({ item, collapseIcon}: any): ReactElement<any, any> => {
     console.log(item)
   
-    const toTask =async () => {
+    const toTask =async (): Promise<void> => {
       const data = await postRequest({id: item.id}, "http://localhost:8080/tasks/" + item.id)
           .catch(err => console.log(err))
       
@@ -69,7 +60,7 @@ function UsersTasks () {
       navigate('' + item.id, {replace: false})
     }
   
-    const updateClick = async () => {
+    const updateClick = async (): Promise<void> => {
       const data = await postRequest({id: item.id}, "http://localhost:8080/tasks/" + item.id)
           .catch(err => console.log(err))
       
@@ -78,12 +69,16 @@ function UsersTasks () {
       navigate('/tasks/update/' + item.id, {replace: true})  
   }
   
-  const deleteClick = async () => {
+  const deleteClick = async (): Promise<void> => {
       let taskData;
       taskData = await deleteRequest({id: item.id}, 'http://localhost:8080/tasks/delete')
-              .catch(err => taskData = null);
+              .catch(err => {
+                taskData = null;
+                console.log(err)
+              });
 
       getTasks(user)
+      console.log(taskData)
       
       navigate('/tasks', {replace: false}) 
   }
@@ -106,7 +101,7 @@ function UsersTasks () {
         </div>
       </div>
     );
-  };
+  }
 }
 
   if (!tasks) {
@@ -116,9 +111,9 @@ function UsersTasks () {
         <Nestable className={styles.Nestable}
           items={tasks}
           renderItem={renderItem}
-          onChange={(items) => onChange(items)}
+          onChange={(items): Promise<void> => onChange(items)}
           maxDepth={3}
-          renderCollapseIcon={({ isCollapsed }) =>
+          renderCollapseIcon={({ isCollapsed }): ReactElement<any, any> =>
             isCollapsed ? (
               <span className={styles.iconCollapse}>+</span>
             ) : (

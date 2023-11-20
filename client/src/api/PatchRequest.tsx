@@ -1,4 +1,4 @@
-export default async function patchRequest(data: any, API_URL: string) {
+export default async function patchRequest(data: object, API_URL: string): Promise<any> {
     console.log(data)
     const newData = JSON.stringify(data)
     console.log(newData)

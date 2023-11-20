@@ -1,25 +1,20 @@
 import styles from './UpdateTaskForm.module.scss';
 import * as Form from '@radix-ui/react-form';
-import React, { useEffect } from 'react';
-import { NavLink, Navigate, Route, redirect, useNavigate, useParams } from 'react-router-dom';
-import postRequest from '../../api/PostRequest';
-import axios from 'axios';
-import { $task, $tasks, $user, $userToken, setTask, setUser, setUserToken } from '../../App';
+import React, { ReactElement } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { $task, $tasks, $user } from '../../App';
 import { useStore } from 'effector-react';
-import RegisterPage from '../../pages/RegisterPage/RegisterPage';
-import RegisterForm from '../RegisterForm/RegisterForm';
 import patchRequest from '../../api/PatchRequest';
 import deleteRequest from '../../api/DeleteRequest';
 
 
-function UpdateTaskForm() {
+function UpdateTaskForm(): ReactElement<any, any> {
   const navigate = useNavigate()
 
   const {id} = useParams()
   const tasks = useStore($tasks)
   let parentTasks = []
   parentTasks = tasks
-  parentTasks.push({id: 0, name: ''})
 
   let task = {
     id: null,
@@ -33,13 +28,16 @@ function UpdateTaskForm() {
 
   let click = '';
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
 
     if (click === 'delete') {
       let taskData;
       taskData = await deleteRequest({id: id}, 'http://localhost:8080/tasks/delete')
-              .catch(err => taskData = null);
+              .catch(err => {
+                taskData = null;
+                console.log(err);
+              });
       
       navigate("/tasks", {replace: false})
       console.log(taskData)
@@ -59,7 +57,10 @@ function UpdateTaskForm() {
       
       let taskData;
       taskData = await patchRequest(data, 'http://localhost:8080/tasks/update')
-              .catch(err => taskData = null);
+              .catch(err => {
+                taskData = null;
+                console.log(err);
+              });
       
       if (!taskData) {
         target.username.value = ''
@@ -72,11 +73,11 @@ function UpdateTaskForm() {
     }  
   };
 
-  const updateClick = () => {
+  const updateClick = (): void => {
     click = 'update';
   }
 
-  const deleteClick = () => {
+  const deleteClick = (): void => {
     click = 'delete';
   }
 
@@ -112,7 +113,8 @@ function UpdateTaskForm() {
         <Form.Label className={styles.FormFieldContext}>Parent</Form.Label>
         <Form.Control asChild className={styles.FormControl}>
             <select id='parent' value={Number(task.parent)}>
-                {parentTasks.map((t: any) => <option value={t.id}>{t.name}</option>)}
+                <option value={0} key={0}></option>
+                {parentTasks.map((t: any) => <option value={t.id} key={t.id}>{t.name}</option>)}
             </select> 
         </Form.Control>
       </Form.Field>

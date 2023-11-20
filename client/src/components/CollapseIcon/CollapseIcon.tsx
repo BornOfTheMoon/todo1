@@ -1,7 +1,7 @@
+import { ReactElement } from 'react';
 import styles from './CollapseIcon.module.scss';
-import React from 'react'
 
-function CollapseIcon(isCollapsed: any) {
+function CollapseIcon(isCollapsed: any): ReactElement<any, any> {
     const flag = isCollapsed ? '+' : '-'
   return (
     <p className={styles.flag}>

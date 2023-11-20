@@ -1,18 +1,18 @@
-import { Route, useNavigate, useParams } from 'react-router-dom';
-import LoginForm from '../../components/LoginForm/LoginForm';
+import { useParams } from 'react-router-dom';
 import Logo from '../../components/Logo/Logo';
 import styles from './TaskPage.module.scss';
 import postRequest from '../../api/PostRequest';
 import TaskCard from '../../components/TaskCard/TaskCard';
-import { $task, $user, $userToken, setTask, setUser, setUserToken } from '../../App';
-import LoginPage from '../LoginPage/LoginPage';
-import { useStore } from 'effector-react';
+import { $user, $userToken, setTask } from '../../App';
 import Logout from '../../components/Logout/Logout';
 import { createEvent, createStore } from 'effector';
+import * as React from 'react';
+import { ReactElement } from 'react';
+
 
 export const setParent = createEvent<string | null>()
 
-const updateParent = (state: string | null, newState: string | null) => {
+const updateParent = (state: string | null, newState: string | null): string | null => {
   state = newState;
   return state;
 }
@@ -20,7 +20,7 @@ const updateParent = (state: string | null, newState: string | null) => {
 export const $parent = createStore<string | null>(null)
     .on(setParent, updateParent)
 
-const getTask = async (id: number) => {
+const getTask = async (id: number): Promise<void> => {
     const data = {
       id: id,     
     };
@@ -36,11 +36,11 @@ const getTask = async (id: number) => {
     }
     }
 
-    let url = 'http://localhost:8080/tasks/' + id
+    const url = 'http://localhost:8080/tasks/' + id
     console.log(url)
 
     taskData = await postRequest(data, url)
-            .catch(err => console.log('error'));
+            .catch(err => console.log(err));
 
     console.log(taskData)
 
@@ -53,7 +53,7 @@ const getTask = async (id: number) => {
 };
 
 
-function TaskPage() {
+function TaskPage(): ReactElement<any, any> {
     console.log($userToken.getState())
     console.log($user.getState())
 

@@ -89,7 +89,7 @@ export class UsersService {
 
   async findAll(): Promise<ResponseDto> {
     const user = await this.usersRepository.find();
-    let users = []
+    const users = []
     for (let i = 0; i < user.length; i++) {
       users.push({id: user[i].id, 
                   name: user[i].name,

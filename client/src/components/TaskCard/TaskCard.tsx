@@ -1,14 +1,15 @@
-import { Route, Router, useLocation, useNavigate, useParams } from "react-router-dom";
-import { $task, $user, setTask } from "../../App";
+import { useNavigate, useParams } from "react-router-dom";
+import { $task, setTask } from "../../App";
 import postRequest from "../../api/PostRequest";
 import styles from "./TaskCard.module.scss"
-import { useEffect, useMemo } from "react";
+import { ReactElement, useEffect } from "react";
 import { useStore } from "effector-react";
 import deleteRequest from "../../api/DeleteRequest";
 import { $parent, setParent } from "../../pages/TaskPage/TaskPage";
+import * as React from 'react';
 
 
-function TaskCard() {
+function TaskCard(): ReactElement<any, any> {
     const navigate = useNavigate()
 
     const {id} = useParams();
@@ -16,7 +17,7 @@ function TaskCard() {
 
     let parentName = useStore($parent)
 
-    const getParent = async (parentId: number | null) => {
+    const getParent = async (parentId: number | null): Promise<void> => {
         if (parentId && parentId > 0) {
             const data = await postRequest({id: parentId}, "http://localhost:8080/tasks/" + id)
                 .catch(err => console.log(err))
@@ -26,7 +27,7 @@ function TaskCard() {
 
     const task = useStore($task)
     
-    const updateClick = async () => {
+    const updateClick = async (): Promise<void> => {
         const data = await postRequest({id: task.id}, "http://localhost:8080/tasks/" + task.id)
         .catch(err => console.log(err))
     
@@ -35,15 +36,18 @@ function TaskCard() {
         navigate("/tasks/update/" + task.id, {replace: false})
     }
 
-    const deleteClick = async () => {
+    const deleteClick = async (): Promise<void> => {
         let taskData;
         taskData = await deleteRequest({id: id}, 'http://localhost:8080/tasks/delete')
-                .catch(err => taskData = null);
-        
+                .catch(err => {
+                    taskData = null;
+                    console.log(err)
+                });
+        console.log(taskData)
         navigate("/tasks/", {replace: false})
     } 
 
-    useEffect(() => {getParent(task.parent)})
+    useEffect((): void => {getParent(task.parent)})
 
     if (!task) {
         return <div>Ooooops</div>

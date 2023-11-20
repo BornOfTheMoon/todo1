@@ -1,15 +1,17 @@
 import { useStore } from "effector-react";
 import postRequest from "../../api/PostRequest";
-import { $user, $userToken, setUser, setUserToken } from "../../App";
+import { $user, $userToken } from "../../App";
 import { useNavigate } from "react-router-dom";
 import styles from "./Logout.module.scss"
+import * as React from 'react';
+import { ReactElement } from "react";
 
-function Logout() {
+function Logout(): ReactElement<any, any> {
     const navigate = useNavigate()
 
     const value = useStore($user)
     
-    const logout = async () => {
+    const logout = async (): Promise<void> => {
         console.log(value)
         const data = {
             id: value
@@ -21,7 +23,8 @@ function Logout() {
 
         let userData;
         userData = await postRequest(data, 'http://localhost:8080/users/logout')
-                .catch(err => userData = null);
+                .catch(err => {userData = null;
+                console.log(err)});
 
         console.log(userData)
 

@@ -1,23 +1,18 @@
 import styles from './LoginForm.module.scss';
 import * as Form from '@radix-ui/react-form';
-import React, { useEffect } from 'react';
-import { NavLink, Navigate, Route, redirect, useNavigate } from 'react-router-dom';
+import React, { ReactElement } from "react";
+import { NavLink, useNavigate } from 'react-router-dom';
 import postRequest from '../../api/PostRequest';
-import axios from 'axios';
-import { $tasks, $user, $userToken, setTasks, setUser, setUserToken } from '../../App';
+import { $user, $userToken, setUser, setUserToken } from '../../App';
 import { useStore } from 'effector-react';
-import RegisterPage from '../../pages/RegisterPage/RegisterPage';
-import RegisterForm from '../RegisterForm/RegisterForm';
-import { GetRequest } from '../../api/GetRequest';
-import { forEachChild } from 'typescript';
 
-function LoginForm() {
+function LoginForm(): ReactElement<any, any> {
   let user = useStore($user)
   let userToken = useStore($userToken)
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     const target = event.currentTarget;
  
@@ -30,7 +25,8 @@ function LoginForm() {
     
     let userData;
     userData = await postRequest(data, 'http://localhost:8080/users/login')
-            .catch(err => userData = null);
+            .catch(err => {userData = null;
+            console.log(err)});
     
     if (!userData) {
       target.username.value = ''
@@ -78,7 +74,7 @@ function LoginForm() {
           Sign in
         </button>
       </Form.Submit>
-      <NavLink to="/register" className={styles.link}>Don't have an account? Sign up!</NavLink>
+      <NavLink to="/register" className={styles.link}>Do not have an account? Sign up!</NavLink>
     </Form.Root>
   );
 }

@@ -1,14 +1,14 @@
 import styles from './RegisterForm.module.scss';
 import * as Form from '@radix-ui/react-form';
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import postRequest from '../../api/PostRequest';
 import { $user, $userToken, setUser, setUserToken } from '../../App';
 
-function RegisterForm() {
+function RegisterForm(): ReactElement<any, any> {
   const navigate = useNavigate();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         const target = event.currentTarget;
 
@@ -29,7 +29,10 @@ function RegisterForm() {
         
         let userData;
         userData = await postRequest(data, 'http://localhost:8080/users/register')
-                .catch(err => userData = null);
+                .catch(err => {
+                  userData = null;
+                  console.log(err);
+                });
     
         if (!userData) {
             target.username.value = ''

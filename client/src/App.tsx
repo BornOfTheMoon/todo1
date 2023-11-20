@@ -1,35 +1,34 @@
-import React, { useState } from 'react';
 import './App.scss';
-import {createStore, createEvent, sample} from 'effector';
-import { useStore } from 'effector-react';
-import Logo from './components/Logo/Logo';
+import {createStore, createEvent} from 'effector';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
-import {BrowserRouter, Navigate, Route, Router, Routes, createBrowserRouter } from 'react-router-dom';
+import {BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import TaskPage from './pages/TaskPage/TaskPage';
 import CreateTaskPage from './pages/CreateTaskPage/CreateTaskPage';
 import UpdateTaskPage from './pages/UpdateTaskPage/UpdateTaskPage';
 import UsersTasksPage from './pages/UsersTasksPage/UsersTasksPage';
-import postRequest from './api/PostRequest';
+import * as React from 'react';
+import { ReactElement } from 'react';
+
 
 export const setUser = createEvent<number | null>()
 export const setUserToken = createEvent<string | null>()
 export const setTasks = createEvent<any>()
-export const setTask = createEvent<Object | null>()
+export const setTask = createEvent<object | null>()
 
-const updateUser = (state: number | null, newState: number | null) => {
+const updateUser = (state: number | null, newState: number | null): number | null => {
   state = newState;
   return state;
 }
-const updateUserToken = (state: string | null, newState: string | null) => {
+const updateUserToken = (state: string | null, newState: string | null): string | null => {
   state = newState;
   return state;
 }
-const updateTasks = (state: any, newState: any) => {
+const updateTasks = (state: any, newState: any): any => {
   state = newState;
   return state;
 }
-const updateTask = (state: any, newState: any) => {
+const updateTask = (state: any, newState: any): any => {
   state = newState;
   return state;
 }
@@ -64,10 +63,7 @@ $userToken.updates.watch(() => {
 })
 
 
-function App() {
-  let [user, setUser] = useState(0);
-  let [userToken, setUserToken] = useState('');
-
+function App(): ReactElement<any, any> {
   return (
     <BrowserRouter>
       <div className="App">

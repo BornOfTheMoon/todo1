@@ -1,25 +1,19 @@
 import styles from './CreateTaskForm.module.scss';
 import * as Form from '@radix-ui/react-form';
-import React, { useEffect } from 'react';
-import { NavLink, Navigate, Route, redirect, useNavigate } from 'react-router-dom';
+import React, { ReactElement } from 'react';
 import postRequest from '../../api/PostRequest';
-import axios from 'axios';
-import { $tasks, $user, $userToken, setUser, setUserToken } from '../../App';
+import { $tasks, $user } from '../../App';
 import { useStore } from 'effector-react';
-import RegisterPage from '../../pages/RegisterPage/RegisterPage';
-import RegisterForm from '../RegisterForm/RegisterForm';
 
 
-function CreateTaskForm() {
+function CreateTaskForm(): ReactElement<any, any> {
   //const navigate = useNavigate();
   const user = useStore($user)
   const tasks = useStore($tasks)
   let parentTasks = []
   parentTasks = tasks
-  parentTasks.push({id: 0, name: ''})
-  console.log(parentTasks)
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     const target = event.currentTarget;
  
@@ -34,7 +28,8 @@ function CreateTaskForm() {
     
     let taskData;
     taskData = await postRequest(data, 'http://localhost:8080/tasks/new')
-            .catch(err => taskData = null);
+            .catch(err => {taskData = null
+            console.log(err)});
     
     if (!taskData) {
       target.username.value = ''
@@ -73,7 +68,8 @@ function CreateTaskForm() {
         </div>
         <Form.Control asChild className={styles.FormControl}>
             <select id='parent'>
-                {parentTasks.map((t: any) => <option value={t.id}>{t.name}</option>)}
+                <option value={0}></option>
+                {parentTasks.map((t: any) => <option value={t.id} key={t.id}>{t.name}</option>)}
             </select>
         </Form.Control>
       </Form.Field>

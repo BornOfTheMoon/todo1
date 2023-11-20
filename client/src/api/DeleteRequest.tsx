@@ -1,4 +1,4 @@
-export default async function deleteRequest(data: any, API_URL: string) {
+export default async function deleteRequest(data: object, API_URL: string): Promise<any> {
     console.log(data)
     const newData = JSON.stringify(data)
     console.log(newData)

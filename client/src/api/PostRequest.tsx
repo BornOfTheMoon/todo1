@@ -1,4 +1,4 @@
-export default async function postRequest(data: any, API_URL: string) {
+export default async function postRequest(data: object, API_URL: string): Promise<any> {
     const newData = JSON.stringify(data)
     const res = await fetch(API_URL, {
         mode: 'cors',

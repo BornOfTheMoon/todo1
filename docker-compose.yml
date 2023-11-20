@@ -1,0 +1,51 @@
+version: "3"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+    - "5432:5432"
+    expose:
+      - 5432
+    volumes:
+    - /data/postgres:/data/postgres
+    env_file:
+    - docker.env
+    networks:
+    - postgres
+
+  frontend:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: dockerfile
+    image: react
+    ports:
+      - "3000:3000"
+    expose:
+      - 3000
+    networks:
+      - postgres
+    volumes:
+      - ./client:/app
+
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+      dockerfile: dockerfile
+    image: server
+    ports:
+      - "8080:8080"
+    expose:
+      - 8080
+    networks:
+      - postgres
+    depends_on:
+      - postgres
+    volumes:
+      - ./server:/app
+ 
+networks:
+  postgres:
+    driver: bridge

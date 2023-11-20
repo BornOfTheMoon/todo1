@@ -1,11 +1,11 @@
+import { ReactElement } from 'react';
 import CreateTaskForm from '../../components/CreateTaskForm/CreateTaskForm';
-import LoginForm from '../../components/LoginForm/LoginForm';
 import Logo from '../../components/Logo/Logo';
 import Logout from '../../components/Logout/Logout';
-import UpdateTaskForm from '../../components/UpdateTaskForm/UpdateTaskForm';
 import styles from './CreateTaskPage.module.scss';
+import * as React from 'react';
 
-function CreateTaskPage() {
+function CreateTaskPage(): ReactElement<any, any> {
   return (
     <div className={styles.createTaskPage}>
         <div className={styles.header}>

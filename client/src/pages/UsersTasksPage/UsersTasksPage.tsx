@@ -1,28 +1,29 @@
-import { Route, useNavigate, useParams } from 'react-router-dom';
-import LoginForm from '../../components/LoginForm/LoginForm';
+import { useNavigate } from 'react-router-dom';
 import Logo from '../../components/Logo/Logo';
 import styles from './UsersTasksPage.module.scss';
 import postRequest from '../../api/PostRequest';
-import { $tasks, $user, $userToken, setTasks, setUser, setUserToken } from '../../App';
+import { $user, setTasks } from '../../App';
 import { useStore } from 'effector-react';
 import UsersTasks from '../../components/UsersTasks/UsersTasks';
 import Logout from '../../components/Logout/Logout';
-import { useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import { sample } from 'effector';
+import { ReactElement, useEffect } from 'react';
+import * as React from 'react';
 
 
-const appendChildren = (curTasks: any, user: number) => {
+const appendChildren = (curTasks: any, user: number): any[] => {
   if (curTasks.length === 0 || curTasks === undefined) {
     return []
   }
-  let t: any[] = []
+  const t: any[] = []
   curTasks.map(async (task: any) => {
-      let children = await postRequest({
+      const children = await postRequest({
         user: user,
         parent: task.id
       }, 'http://localhost:8080/tasks/tasks')
-                      .catch(err => task.children = [])
+                      .catch(err => {
+                        task.children = [];
+                        console.log(err);
+                      })
 
       task = {
         id: task.id,
@@ -42,18 +43,17 @@ const appendChildren = (curTasks: any, user: number) => {
   return t
 }
 
-export const getTasks = async (user: number | null) => {
-  let tasks;
+export const getTasks = async (user: number | null): Promise<void> => {
   const taskData = {
     user: user,
     parent: 0
   }
-  tasks = await postRequest(taskData, 'http://localhost:8080/tasks/tasks')
+  const tasks = await postRequest(taskData, 'http://localhost:8080/tasks/tasks')
           .catch(err => console.log(err));
 
   console.log(tasks.data)
 
-  let usersTasks = tasks.data
+  const usersTasks = tasks.data
 
   let ts
   if (usersTasks !== undefined) {
@@ -62,16 +62,15 @@ export const getTasks = async (user: number | null) => {
   
   console.log(ts)
   setTasks(ts)
-
-  return ts
 }
 
-function UsersTasksPage() {
+function UsersTasksPage(): ReactElement<any, any> {
   const navigate = useNavigate()
   const user = useStore($user)
-  const tasks = useStore($tasks)
 
-  useEffect(() => {getTasks(user)}, [])
+  useEffect(() => {
+    getTasks(user)
+  }, [])
  
     return (
         <div className={styles.taskPage}>
@@ -80,7 +79,7 @@ function UsersTasksPage() {
                 <Logout/>
             </div>
             <UsersTasks/>
-            <div className={styles.Plus} onClick={() => {
+            <div className={styles.Plus} onClick={(): void => {
                 navigate('/tasks/new', {replace: true})
             }}>+</div>
             <div className={styles.footer}>

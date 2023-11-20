@@ -1,14 +1,16 @@
 import { useParams } from 'react-router-dom';
-import LoginForm from '../../components/LoginForm/LoginForm';
 import Logo from '../../components/Logo/Logo';
 import Logout from '../../components/Logout/Logout';
 import UpdateTaskForm from '../../components/UpdateTaskForm/UpdateTaskForm';
 import styles from './UpdateTaskPage.module.scss';
 import postRequest from '../../api/PostRequest';
 import { setTask } from '../../App';
+import * as React from 'react';
+import { ReactElement } from 'react';
 
 
-const getTask = async (id: number) => {
+
+const getTask = async (id: number): Promise<void> => {
   const data = {
     id: id,     
   };
@@ -24,11 +26,11 @@ const getTask = async (id: number) => {
   }
   }
 
-  let url = 'http://localhost:8080/tasks/' + id
+  const url = 'http://localhost:8080/tasks/' + id
   console.log(url)
 
   taskData = await postRequest(data, url)
-          .catch(err => console.log('error'));
+          .catch(err => console.log(err));
 
   console.log(taskData)
 
@@ -40,7 +42,7 @@ const getTask = async (id: number) => {
   })
 };
 
-function UpdateTaskPage() {
+function UpdateTaskPage(): ReactElement<any, any> {
   const {id} = useParams()
   getTask(Number(id))
   return (

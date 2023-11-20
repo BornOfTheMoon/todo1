@@ -52,7 +52,7 @@ export class TasksService {
     const task = await this.tasksRepository.find({
         where: {user: findTasksDto.user, parent: findTasksDto.parent}
     });
-    let tasks = []
+    const tasks = []
     for (let i = 0; i < task.length; i++) {
       tasks.push({id: task[i].id, 
                   user: task[i].user,
