@@ -18,7 +18,7 @@ services:
     container_name: client
     build:
       context: ./client
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     image: react
     ports:
       - "3000:3000"
@@ -26,6 +26,9 @@ services:
       - 3000
     networks:
       - postgres
+    depends_on:
+      - postgres
+      - backend
     volumes:
       - ./client:/app
 
@@ -33,10 +36,10 @@ services:
     container_name: backend
     build:
       context: ./server
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     image: server
     ports:
-      - "8080:8080"
+      - "80:8080"
     expose:
       - 8080
     networks:
